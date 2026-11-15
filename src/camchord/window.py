@@ -51,7 +51,7 @@ class _Later:
     It keeps itself alive until it fires or is cancelled: callers that ignore the return value
     would otherwise lose the timer to garbage collection and the callback would never run."""
 
-    _pending: set["_Later"] = set()
+    _pending: set = set()
 
     def __init__(self, parent, seconds: float, fn):
         self._fn = fn
