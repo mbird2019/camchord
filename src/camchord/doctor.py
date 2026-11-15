@@ -49,7 +49,10 @@ def _qt_check() -> bool:
 
 def _ffmpeg_check() -> bool:
     if not shutil.which("ffmpeg"):
-        _line("FAIL", "ffmpeg not found (Debian/Ubuntu `sudo apt install ffmpeg`, Fedora `sudo dnf install ffmpeg-free`, Arch `sudo pacman -S ffmpeg`)")
+        _line(
+            "FAIL",
+            "ffmpeg not found (Debian/Ubuntu `sudo apt install ffmpeg`, Fedora `sudo dnf install ffmpeg-free`, Arch `sudo pacman -S ffmpeg`)",
+        )
         return False
     from .recorder import choose_encoder
 
@@ -104,9 +107,6 @@ def _permission_hint() -> str:
 def run() -> int:
     print(f"{APP_NAME} {__version__} on Python {sys.version.split()[0]}")
     ok = True
-    if sys.version_info < (3, 10):
-        _line("FAIL", "Python 3.10 or newer is needed")
-        ok = False
     ok = _qt_check() and ok
     ok = _ffmpeg_check() and ok
     _camera_check()
