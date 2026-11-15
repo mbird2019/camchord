@@ -1,5 +1,5 @@
 // obsbot-ai: drive an OBSBOT camera's onboard AI tracking and stored settings over OBSBOT's SDK (libdev).
-// Optional helper for QuickCam; prints one JSON line on stdout. Tested with the Tiny 2 Lite.
+// Optional helper for CamChord; prints one JSON line on stdout. Tested with the Tiny 2 Lite.
 //   obsbot-ai status
 //   obsbot-ai mode none|group|human|hand|whiteboard|desk [normal|upper|closeup|headless|lower]
 //   obsbot-ai framing standard|headroom|motion

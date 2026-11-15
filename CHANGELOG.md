@@ -13,5 +13,5 @@ of shell scripts that did the same job through v4l2loopback devices.
   to glide.
 - Camera profile for the OBSBOT Tiny 2 Lite (speed calibration, target
   readback, keep-awake, autofocus repair).
-- `quickcam ctl` remote control over a Unix socket; one instance at a time.
+- `camchord ctl` remote control over a Unix socket; one instance at a time.
 - Optional OBSBOT SDK helper for tracking modes and on-camera settings.

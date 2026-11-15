@@ -3,7 +3,7 @@
 OBSBOT cameras keep their tracking modes, gesture switches and a few picture
 settings behind OBSBOT's own SDK; they are not reachable as ordinary camera
 controls. This small program calls the SDK and prints one line of JSON, and
-QuickCam uses it when it finds it. Without it QuickCam still moves, zooms,
+CamChord uses it when it finds it. Without it CamChord still moves, zooms,
 previews, snapshots and records; only the tracking keys (4 to 0) and the
 Camera tab stay unavailable.
 
@@ -22,8 +22,8 @@ make
 make install          # copies obsbot-ai to ~/.local/bin
 ```
 
-QuickCam looks for `obsbot-ai` on your `PATH`. To point it somewhere else, set
-`"obsbot_helper": "/full/path/to/obsbot-ai"` in `~/.config/quickcam/settings.json`.
+CamChord looks for `obsbot-ai` on your `PATH`. To point it somewhere else, set
+`"obsbot_helper": "/full/path/to/obsbot-ai"` in `~/.config/camchord/settings.json`.
 
 Try it by hand with the camera plugged in:
 

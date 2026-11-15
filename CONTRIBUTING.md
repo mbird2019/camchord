@@ -36,7 +36,7 @@ QT_QPA_PLATFORM=offscreen .venv/bin/python tools/live_check.py
 | `stream.py`, `mjpeg.py` | The capture process and cutting its output into frames |
 | `recorder.py` | The recording process, encoder and microphone choice |
 | `obsbot.py` | The optional OBSBOT SDK helper |
-| `ipc.py` | `quickcam ctl` |
+| `ipc.py` | `camchord ctl` |
 | `window.py`, `widgets.py` | The window |
 
 ## Reporting a camera
@@ -44,7 +44,7 @@ QT_QPA_PLATFORM=offscreen .venv/bin/python tools/live_check.py
 Please include the output of:
 
 ```sh
-quickcam cameras
+camchord cameras
 v4l2-ctl -d /dev/videoN --list-ctrls
 v4l2-ctl -d /dev/videoN --list-formats-ext
 ```
@@ -68,7 +68,7 @@ says. Measure, do not guess:
    sleeps, note after how long; `keep_awake_s` should be well under that.
 
 Put the numbers in `profiles.py` with a comment saying when and how they were
-measured, and add the model's name as it appears in `quickcam cameras` to
+measured, and add the model's name as it appears in `camchord cameras` to
 `match`.
 
 ## Style

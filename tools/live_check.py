@@ -22,8 +22,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 from PySide6.QtCore import QEventLoop, QTimer  # noqa: E402
 from PySide6.QtWidgets import QApplication  # noqa: E402
 
-from quickcam.config import Settings  # noqa: E402
-from quickcam.window import MainWindow  # noqa: E402
+from camchord.config import Settings  # noqa: E402
+from camchord.window import MainWindow  # noqa: E402
 
 
 def wait(ms: int) -> None:
@@ -48,8 +48,8 @@ def main() -> int:
     options = parser.parse_args()
     shot = options.shot
     app = QApplication(sys.argv[:1])
-    app.setApplicationName("quickcam-live-check")
-    tmp = Path(tempfile.mkdtemp(prefix="quickcam-check-"))
+    app.setApplicationName("camchord-live-check")
+    tmp = Path(tempfile.mkdtemp(prefix="camchord-check-"))
     settings = Settings(tmp / "settings.json")
     settings._data["output_dir"] = str(tmp / "out")
     win = MainWindow(settings)

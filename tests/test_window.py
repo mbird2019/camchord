@@ -7,11 +7,11 @@ pytest.importorskip("PySide6")
 from fakes import obsbot_controls  # noqa: E402
 from PySide6.QtWidgets import QApplication  # noqa: E402
 
-from quickcam import window as window_module  # noqa: E402
-from quickcam.config import Settings  # noqa: E402
-from quickcam.devices import Camera  # noqa: E402
-from quickcam.profiles import OBSBOT_TINY_2_LITE  # noqa: E402
-from quickcam.v4l2 import Mode  # noqa: E402
+from camchord import window as window_module  # noqa: E402
+from camchord.config import Settings  # noqa: E402
+from camchord.devices import Camera  # noqa: E402
+from camchord.profiles import OBSBOT_TINY_2_LITE  # noqa: E402
+from camchord.v4l2 import Mode  # noqa: E402
 
 WEBCAM = Camera("usb-Webcam-video-index0", "Integrated Webcam HD", "/dev/null", modes=(Mode("MJPG", 1280, 720, (30,)),))
 PTZCAM = Camera(

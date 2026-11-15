@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "quickcam"
+name = "camchord"
 dynamic = ["version"]
 description = "A desktop control window for USB cameras on Linux: live view, snapshots, recording, and pan/tilt/zoom from the keyboard."
 readme = "README.md"
@@ -26,17 +26,17 @@ dependencies = ["PySide6>=6.5"]
 dev = ["pytest>=7", "ruff>=0.6"]
 
 [project.scripts]
-quickcam = "quickcam.__main__:main"
+camchord = "camchord.__main__:main"
 
 [tool.hatch.version]
-path = "src/quickcam/__init__.py"
+path = "src/camchord/__init__.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/quickcam"]
+packages = ["src/camchord"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"data/quickcam-app.desktop" = "share/applications/quickcam-app.desktop"
-"data/quickcam-app.svg" = "share/icons/hicolor/scalable/apps/quickcam-app.svg"
+"data/camchord.desktop" = "share/applications/camchord.desktop"
+"data/camchord.svg" = "share/icons/hicolor/scalable/apps/camchord.svg"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

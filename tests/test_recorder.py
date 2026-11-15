@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from quickcam.devices import StreamMode
-from quickcam.recorder import Encoder, Recipe, pick_microphone, record_command
-from quickcam.stream import capture_command
+from camchord.devices import StreamMode
+from camchord.recorder import Encoder, Recipe, pick_microphone, record_command
+from camchord.stream import capture_command
 
 MODE = StreamMode("mjpeg", 1920, 1080, 30)
 

@@ -995,7 +995,7 @@ class MainWindow(QMainWindow):
         self._close_camera()
         super().closeEvent(event)
 
-    # ---- commands from outside (quickcam ctl ...) --------------------------------
+    # ---- commands from outside (camchord ctl ...) --------------------------------
     def status(self) -> dict:
         position = self.ptz.position() if self.ptz else None
         mode = self.stream.mode if self.stream.running else None

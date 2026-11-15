@@ -1,6 +1,6 @@
 import json
 
-from quickcam.config import Settings
+from camchord.config import Settings
 
 
 def test_defaults(tmp_path):

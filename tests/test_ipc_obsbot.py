@@ -1,5 +1,5 @@
-from quickcam import ipc
-from quickcam.obsbot import parse_status
+from camchord import ipc
+from camchord.obsbot import parse_status
 
 
 def test_request_validation():

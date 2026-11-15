@@ -1,4 +1,4 @@
-from quickcam.mjpeg import Splitter
+from camchord.mjpeg import Splitter
 
 
 def jpeg(payload: bytes, extra_header: bytes = b"") -> bytes:

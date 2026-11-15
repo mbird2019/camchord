@@ -2,7 +2,7 @@
 
 The app listens on a Unix socket in the user's runtime folder. A request is one
 line holding a JSON list of words; the answer is one line of JSON. The client
-half uses only the standard library, so ``quickcam ctl ...`` starts fast enough
+half uses only the standard library, so ``camchord ctl ...`` starts fast enough
 to sit behind a key that is held down.
 """
 

@@ -1,11 +1,11 @@
 [Desktop Entry]
 Type=Application
-Name=QuickCam
+Name=CamChord
 GenericName=Camera Control
 Comment=Live view, snapshots, recording and pan/tilt/zoom for a USB camera
-Exec=quickcam
-Icon=quickcam-app
+Exec=camchord
+Icon=camchord
 Terminal=false
 Categories=AudioVideo;Video;Recorder;
 Keywords=camera;webcam;ptz;record;snapshot;obsbot;
-StartupWMClass=quickcam-app
+StartupWMClass=camchord

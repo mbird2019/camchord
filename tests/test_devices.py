@@ -1,8 +1,8 @@
 import os
 
-from quickcam.devices import friendly_name, pick_mode, sizes_offered, stable_ids
-from quickcam.profiles import GENERIC, OBSBOT_TINY_2_LITE, profile_for
-from quickcam.v4l2 import Mode, control_name
+from camchord.devices import friendly_name, pick_mode, sizes_offered, stable_ids
+from camchord.profiles import GENERIC, OBSBOT_TINY_2_LITE, profile_for
+from camchord.v4l2 import Mode, control_name
 
 WEBCAM = (
     Mode("MJPG", 1280, 720, (30,)),

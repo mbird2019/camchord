@@ -1,6 +1,6 @@
 """Stand-ins for a camera's controls, a clock and a scheduler, so motion can be tested without hardware."""
 
-from quickcam.v4l2 import Control
+from camchord.v4l2 import Control
 
 ARC = 3600
 

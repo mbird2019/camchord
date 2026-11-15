@@ -1,7 +1,7 @@
 from fakes import ARC, FakeTime, absolute_only_controls, obsbot_controls
 
-from quickcam.profiles import GENERIC, OBSBOT_TINY_2_LITE
-from quickcam.ptz import Ptz
+from camchord.profiles import GENERIC, OBSBOT_TINY_2_LITE
+from camchord.ptz import Ptz
 
 
 def make(controls, profile, **kw):
