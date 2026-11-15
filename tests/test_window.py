@@ -180,3 +180,19 @@ def test_tracking_needs_the_helper(make_window):
 def test_unknown_command(make_window):
     win, _ = make_window([WEBCAM])
     assert win.command(["explode"])["ok"] is False
+
+
+def test_later_fires_even_if_the_caller_drops_it():
+    """A discarded timer used to be garbage collected and its callback never ran."""
+    import gc
+    import time
+
+    app = QApplication.instance() or QApplication([])
+    fired = []
+    window_module._Later(app, 0.05, lambda: fired.append(1))  # return value dropped on purpose
+    gc.collect()
+    deadline = time.monotonic() + 2
+    while not fired and time.monotonic() < deadline:
+        app.processEvents()
+        time.sleep(0.01)
+    assert fired == [1]

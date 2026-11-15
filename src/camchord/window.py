@@ -46,10 +46,16 @@ def size_text(size: int) -> str:
 
 
 class _Later:
-    """A one-shot timer the motion code can cancel safely, even after it fired."""
+    """A one-shot timer the motion code can cancel safely, even after it fired.
+
+    It keeps itself alive until it fires or is cancelled: callers that ignore the return value
+    would otherwise lose the timer to garbage collection and the callback would never run."""
+
+    _pending: set["_Later"] = set()
 
     def __init__(self, parent, seconds: float, fn):
         self._fn = fn
+        _Later._pending.add(self)
         self._timer: QTimer | None = QTimer(parent)
         self._timer.setSingleShot(True)
         self._timer.timeout.connect(self._fire)
@@ -60,6 +66,7 @@ class _Later:
         self._fn()
 
     def cancel(self) -> None:
+        _Later._pending.discard(self)
         timer, self._timer = self._timer, None
         if timer is not None:
             timer.stop()
