@@ -51,7 +51,7 @@ Your user must be allowed to open the camera (on most distributions: be in the
 From a checkout:
 
 ```sh
-git clone <this repository>
+git clone https://github.com/mbird2019/camchord
 cd camchord
 python -m venv .venv
 .venv/bin/pip install .

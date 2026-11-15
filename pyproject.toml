@@ -22,6 +22,10 @@ classifiers = [
 ]
 dependencies = ["PySide6>=6.5"]
 
+[project.urls]
+Homepage = "https://github.com/mbird2019/camchord"
+Issues = "https://github.com/mbird2019/camchord/issues"
+
 [project.optional-dependencies]
 dev = ["pytest>=7", "ruff>=0.6"]
 
