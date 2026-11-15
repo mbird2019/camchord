@@ -323,10 +323,18 @@ class Ptz:
     def set_autofocus(self, on: bool) -> bool:
         return bool(self.autofocus_control) and self.c.set(self.autofocus_control, 1 if on else 0)
 
-    def heal_autofocus(self, manual: bool) -> None:
-        """Turn autofocus back on if this camera is known to lose it and the user did not ask for manual."""
-        if self.profile.heal_autofocus and not manual and self.autofocus() is False:
+    def heal_autofocus(self, manual: bool, hold_manual: bool = False) -> None:
+        """Turn autofocus back on if this camera is known to lose it and the user did not ask for manual.
+
+        With hold_manual, a manual choice is also kept: this camera switches autofocus back on by
+        itself whenever it moves (the keep-awake nudge included), so it is switched off again."""
+        if not self.profile.heal_autofocus:
+            return
+        state = self.autofocus()
+        if state is False and not manual:
             self.set_autofocus(True)
+        elif state is True and manual and hold_manual:
+            self.set_autofocus(False)
 
     # ---- housekeeping --------------------------------------------------------
     def keep_awake(self) -> bool:

@@ -474,7 +474,7 @@ class MainWindow(QMainWindow):
         if not present and self.camera is not None:
             self._close_camera()
         if self.ptz is not None and self.camera is not None and not self.ptz.active:
-            self.ptz.heal_autofocus(self.settings.manual_focus(self.camera.id))
+            self.ptz.heal_autofocus(self.settings.manual_focus(self.camera.id), hold_manual=True)
         self.refresh()
 
     def _on_stream_stopped(self, message: str) -> None:

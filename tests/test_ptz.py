@@ -161,6 +161,18 @@ def test_autofocus_heal_respects_a_manual_choice():
     assert ptz.autofocus() is True
 
 
+def test_manual_focus_is_held_when_the_camera_turns_autofocus_back_on():
+    c = obsbot_controls()
+    ptz, _ = make(c, OBSBOT_TINY_2_LITE)
+    c.values["focus_automatic_continuous"] = 1  # the camera did this when it moved
+    ptz.heal_autofocus(manual=True)  # opening the camera leaves it alone
+    assert ptz.autofocus() is True
+    ptz.heal_autofocus(manual=True, hold_manual=True)
+    assert ptz.autofocus() is False
+    ptz.heal_autofocus(manual=False, hold_manual=True)
+    assert ptz.autofocus() is True
+
+
 def test_stop_halts_everything():
     c = obsbot_controls()
     ptz, t = make(c, OBSBOT_TINY_2_LITE)
