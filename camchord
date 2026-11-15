@@ -30,6 +30,11 @@ find_python() {
 setup() {
     local py
     py=$(find_python) || die "Python 3.10 or newer is needed (Debian/Ubuntu: sudo apt install python3 python3-venv; Fedora: sudo dnf install python3)."
+    # A moved or renamed checkout leaves the venv pointing at the old folder: rebuild it (it holds nothing of yours).
+    if [ -f "$STAMP" ] && [ "$(sed -n 2p "$STAMP")" != "$HERE" ]; then
+        say "this folder moved; rebuilding ./.venv"
+        rm -rf "$VENV"
+    fi
     if [ ! -x "$VENV/bin/python" ]; then
         say "first run: setting up in $VENV (downloads Qt, about 200 MB, once)"
         if ! "$py" -m venv "$VENV"; then
@@ -48,18 +53,27 @@ setup() {
         "$VENV/bin/python" -m ensurepip --upgrade >/dev/null 2>&1 || die "pip is missing from $VENV; delete that folder and run again."
         "$VENV/bin/python" -m pip install --disable-pip-version-check -e "$HERE" || die "pip could not install CamChord."
     fi
-    cksum < "$HERE/pyproject.toml" > "$STAMP"
+    { cksum < "$HERE/pyproject.toml"; printf '%s\n' "$HERE"; } > "$STAMP"
     command -v ffmpeg >/dev/null 2>&1 ||
         say "ffmpeg is not installed, and CamChord needs it (Debian/Ubuntu: sudo apt install ffmpeg; Fedora: sudo dnf install ffmpeg-free; Arch: sudo pacman -S ffmpeg)."
 }
 
 ready() {
-    [ -x "$VENV/bin/camchord" ] && [ -f "$STAMP" ] && [ "$(cksum < "$HERE/pyproject.toml")" = "$(cat "$STAMP")" ]
+    [ -x "$VENV/bin/camchord" ] && [ -f "$STAMP" ] &&
+        [ "$(cksum < "$HERE/pyproject.toml")" = "$(sed -n 1p "$STAMP")" ] && [ "$(sed -n 2p "$STAMP")" = "$HERE" ]
+}
+
+# True for a symlink that points at a file called camchord (a launcher from this or another checkout, or the venv script).
+is_ours() {
+    [ -L "$1" ] && case "$(readlink "$1")" in */camchord) true ;; *) false ;; esac
 }
 
 install_launcher() {
     local bin="${XDG_BIN_HOME:-$HOME/.local/bin}" data="${XDG_DATA_HOME:-$HOME/.local/share}"
     mkdir -p "$bin" "$data/applications" "$data/icons/hicolor/scalable/apps"
+    if [ -e "$bin/camchord" ] || [ -L "$bin/camchord" ]; then
+        is_ours "$bin/camchord" || die "$bin/camchord exists and is not a CamChord launcher; leaving it alone."
+    fi
     ln -sf "$HERE/camchord" "$bin/camchord"
     sed "s|^Exec=.*|Exec=$HERE/camchord|" "$HERE/data/camchord.desktop" > "$data/applications/camchord.desktop"
     cp "$HERE/data/camchord.svg" "$data/icons/hicolor/scalable/apps/camchord.svg"
@@ -70,7 +84,10 @@ install_launcher() {
 
 uninstall_launcher() {
     local bin="${XDG_BIN_HOME:-$HOME/.local/bin}" data="${XDG_DATA_HOME:-$HOME/.local/share}"
-    rm -f "$bin/camchord" "$data/applications/camchord.desktop" "$data/icons/hicolor/scalable/apps/camchord.svg"
+    if [ -e "$bin/camchord" ] || [ -L "$bin/camchord" ]; then
+        is_ours "$bin/camchord" && rm -f "$bin/camchord" || say "$bin/camchord is not a CamChord launcher; left alone"
+    fi
+    rm -f "$data/applications/camchord.desktop" "$data/icons/hicolor/scalable/apps/camchord.svg"
     say "removed the launcher and menu entry (this folder and ./.venv are left alone)"
 }
 
