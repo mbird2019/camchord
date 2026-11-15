@@ -540,7 +540,7 @@ class MainWindow(QMainWindow):
         finally:
             QApplication.restoreOverrideCursor()
         if encoder is None:
-            self.say("Can't record: ffmpeg has no working H.264 encoder here.", notify=True)
+            self.say("Can't record: this ffmpeg has no video encoder that works here (run `camchord doctor`).", notify=True)
             return False
         self.recorder.start(
             Recipe(

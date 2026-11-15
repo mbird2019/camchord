@@ -4,6 +4,8 @@ Bug reports, camera reports and patches are welcome.
 
 ## Set up
 
+`./camchord` builds the environment for you; for development add the test tools:
+
 ```sh
 python -m venv .venv            # add --system-site-packages to reuse a distro PySide6
 .venv/bin/pip install -e ".[dev]"

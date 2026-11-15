@@ -5,6 +5,10 @@
 First version as a standalone app. It replaces a desktop-bar widget and a set
 of shell scripts that did the same job through v4l2loopback devices.
 
+- `./camchord` runs the app from a fresh checkout: it builds `./.venv` on first
+  use; `--install` adds a command and menu entry. `camchord doctor` checks Qt,
+  ffmpeg, encoders and camera access.
+- Recording falls back to OpenH264, then MPEG-4, when ffmpeg has no libx264.
 - Window with live picture, camera picker with an Off choice, keyboard map,
   recording settings.
 - Snapshots and H.264 recording (VA-API or libx264) from a single camera

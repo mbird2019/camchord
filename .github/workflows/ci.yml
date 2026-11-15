@@ -28,3 +28,25 @@ jobs:
         env:
           QT_QPA_PLATFORM: offscreen
         run: pytest -q
+
+  quickstart:
+    # What a new user does: a clean checkout, then the launcher, with nothing installed beforehand.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Launcher sets itself up
+        run: ./camchord --version
+      - name: Doctor
+        run: ./camchord doctor
+      - name: Launcher is quick the second time
+        run: time ./camchord --version
+      - name: Install and uninstall the menu entry
+        env:
+          XDG_BIN_HOME: ${{ runner.temp }}/bin
+          XDG_DATA_HOME: ${{ runner.temp }}/share
+        run: |
+          ./camchord --install
+          test -x "$XDG_BIN_HOME/camchord"
+          grep -q "^Exec=$PWD/camchord" "$XDG_DATA_HOME/applications/camchord.desktop"
+          ./camchord --uninstall
+          test ! -e "$XDG_BIN_HOME/camchord"

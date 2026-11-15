@@ -50,3 +50,21 @@ def test_microphone_prefers_the_cameras_own():
     assert "OBSBOT" in pick_microphone(cam, "OBSBOT Tiny 2 Lite", sources, sources[1])
     assert pick_microphone("usb-Webcam-video-index0", "Integrated Webcam HD", sources, sources[1]) == sources[1]
     assert pick_microphone("usb-Webcam-video-index0", "Integrated Webcam HD", sources, sources[0]) == ""  # never a monitor
+
+
+def test_fallback_encoders_use_their_own_quality_arguments():
+    openh264 = record_command(Recipe(Path("/out"), MODE, "mkv", "standard", 30, "", Encoder("openh264")))
+    assert "libopenh264" in openh264 and openh264[openh264.index("-b:v") + 1] == "8M" and "-crf" not in openh264
+    mpeg4 = record_command(Recipe(Path("/out"), MODE, "mkv", "high", 30, "", Encoder("mpeg4")))
+    assert mpeg4[mpeg4.index("-c:v") + 1] == "mpeg4" and mpeg4[mpeg4.index("-q:v") + 1] == "3"
+
+
+def test_encoder_choice_falls_back_when_libx264_is_missing(monkeypatch):
+    from camchord import recorder
+
+    monkeypatch.setattr(recorder, "_probed", {})
+    monkeypatch.setattr(recorder.glob, "glob", lambda pattern: [])
+    monkeypatch.setattr(recorder, "_works", lambda encoder, w, h: encoder.kind == "mpeg4")
+    assert recorder.choose_encoder("auto", 640, 480) == Encoder("mpeg4")
+    monkeypatch.setattr(recorder, "_works", lambda encoder, w, h: False)
+    assert recorder.choose_encoder("auto", 1280, 720) is None

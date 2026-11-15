@@ -38,6 +38,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--version", action="version", version=f"{APP_NAME} {__version__}")
     sub = parser.add_subparsers(dest="action")
     sub.add_parser("cameras", help="list the connected cameras as JSON and exit")
+    sub.add_parser("doctor", help="check this computer (Qt, ffmpeg, camera access) and say what to fix")
     ctl = sub.add_parser("ctl", help="send a command to the running window (see below)")
     ctl.add_argument("words", nargs="+", metavar="COMMAND")
     return parser
@@ -109,6 +110,10 @@ def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     if args.action == "cameras":
         return _cameras()
+    if args.action == "doctor":
+        from .doctor import run
+
+        return run()
     if args.action == "ctl":
         return _ctl(args.words)
     return _gui()

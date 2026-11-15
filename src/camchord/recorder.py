@@ -24,16 +24,23 @@ from .devices import StreamMode
 
 BASE = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-nostdin"]
 MAX_BACKLOG = 256 * 1024 * 1024
+# For ffmpeg builds without libx264 (some distributions ship only OpenH264, or none): keyed by the quality number.
+FALLBACK_BITRATE = {18: "12M", 24: "8M", 30: "4M"}
+FALLBACK_QSCALE = {18: "3", 24: "5", 30: "8"}
 
 
 @dataclass(frozen=True)
 class Encoder:
-    kind: str  # "vaapi" or "software"
+    kind: str  # "vaapi", "software" (libx264), "openh264" or "mpeg4" (the last two are fallbacks)
     device: str = ""
 
     @property
     def label(self) -> str:
-        return f"graphics card ({os.path.basename(self.device)})" if self.kind == "vaapi" else "processor (libx264)"
+        if self.kind == "vaapi":
+            return f"graphics card ({os.path.basename(self.device)})"
+        return {"openh264": "processor (OpenH264)", "mpeg4": "processor (MPEG-4, this ffmpeg has no H.264 encoder)"}.get(
+            self.kind, "processor (libx264)"
+        )
 
 
 @dataclass(frozen=True)
@@ -52,6 +59,10 @@ class Recipe:
 def _video_args(encoder: Encoder, qp: int) -> list[str]:
     if encoder.kind == "vaapi":
         return ["-vf", "format=nv12,hwupload", "-c:v", "h264_vaapi", "-qp", str(qp)]
+    if encoder.kind == "openh264":  # takes a bitrate, not a quality number
+        return ["-vf", "format=yuv420p", "-c:v", "libopenh264", "-b:v", FALLBACK_BITRATE[qp]]
+    if encoder.kind == "mpeg4":
+        return ["-vf", "format=yuv420p", "-c:v", "mpeg4", "-q:v", FALLBACK_QSCALE[qp]]
     return ["-vf", "format=yuv420p", "-c:v", "libx264", "-preset", "veryfast", "-crf", str(qp)]
 
 
@@ -91,7 +102,7 @@ def _works(encoder: Encoder, width: int, height: int) -> bool:
 def choose_encoder(preference: str, width: int, height: int) -> Encoder | None:
     """The first encoder that really encodes a few frames at this size, tried once and remembered.
 
-    "auto" tries each graphics card (VA-API), then the processor; "vaapi" and "software" try only that.
+    "auto" tries each graphics card (VA-API), then the processor (libx264, OpenH264, plain MPEG-4); "vaapi" and "software" try only that.
     """
     key = (preference, width, height)
     if key not in _probed:
@@ -99,7 +110,7 @@ def choose_encoder(preference: str, width: int, height: int) -> Encoder | None:
         if preference in ("auto", "vaapi"):
             candidates += [Encoder("vaapi", node) for node in sorted(glob.glob("/dev/dri/renderD*"))]
         if preference in ("auto", "software"):
-            candidates.append(Encoder("software"))
+            candidates += [Encoder("software"), Encoder("openh264"), Encoder("mpeg4")]
         _probed[key] = next((e for e in candidates if _works(e, width, height)), None)
     return _probed[key]
 

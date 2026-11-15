@@ -34,43 +34,69 @@ a plain laptop webcam.
 Preview, snapshots and recording all come from one camera stream inside the
 app. No virtual video devices (v4l2loopback) and no root setup are needed.
 
-## Requirements
+## Quick start
 
-- Linux with a V4L2 camera (any UVC webcam)
-- Python 3.10 or newer
-- [PySide6](https://pypi.org/project/PySide6/) 6.5 or newer (Qt 6)
-- `ffmpeg` on your `PATH`
-- Optional: `pactl` (PipeWire or PulseAudio) for sound in recordings,
-  `notify-send` for notifications, a VA-API driver for hardware encoding
-
-Your user must be allowed to open the camera (on most distributions: be in the
-`video` group, or be the logged-in desktop user).
-
-## Install
-
-From a checkout:
+Plug in the camera, then:
 
 ```sh
 git clone https://github.com/mbird2019/camchord
 cd camchord
+./camchord
+```
+
+The first run builds a private Python environment in `./.venv` (it downloads
+Qt, about 200 MB, once) and then opens the window. Later runs start at once.
+Nothing is installed system-wide and no root is needed. To get a command and a
+menu entry as well, run `./camchord --install` (`--uninstall` removes them).
+
+If it does not start or the camera is missing, run `./camchord doctor`: it
+checks Qt, ffmpeg, encoders and camera access, and prints the fix for each.
+
+What you need on the computer:
+
+- Linux with a V4L2 camera (any UVC webcam)
+- Python 3.10 or newer (Debian and Ubuntu also need `python3-venv`)
+- `ffmpeg` (Debian/Ubuntu `ffmpeg`, Fedora `ffmpeg-free`, Arch `ffmpeg`)
+- On X11, the `xcb-cursor` library (Debian/Ubuntu `libxcb-cursor0`, Fedora
+  `xcb-util-cursor`); Wayland needs nothing extra
+- Permission to open the camera: logging in at the computer's own screen is
+  enough on most systems; otherwise add yourself to the `video` group
+- Optional: `pactl` (PipeWire or PulseAudio) for sound in recordings,
+  `notify-send` for notifications, a VA-API driver for hardware encoding
+
+If `ffmpeg` has no H.264 encoder (some distribution builds), recording falls
+back to OpenH264 and then to plain MPEG-4; preview and snapshots never need one.
+
+### Without the OBSBOT helper
+
+Everything works on any UVC camera without extra software: preview,
+snapshots, recording, and pan, tilt, zoom, focus and the keep-awake nudge on
+cameras that have those controls (the OBSBOT Tiny 2 Lite does). Only the OBSBOT
+tracking modes and gesture switches (keys `4` to `0`) need the optional
+`obsbot-ai` helper, which is built against OBSBOT's own SDK and cannot be
+included here (see `contrib/obsbot-ai`).
+
+### Other ways to install
+
+With `pipx`, no checkout needed:
+
+```sh
+pipx install git+https://github.com/mbird2019/camchord
+camchord
+```
+
+By hand, from a checkout (this reuses your distribution's PySide6 if you give
+`--system-site-packages`; Arch `pyside6`, Fedora `python3-pyside6`):
+
+```sh
 python -m venv .venv
-.venv/bin/pip install .
+.venv/bin/pip install -e .
 .venv/bin/camchord
 ```
 
-If your distribution packages PySide6 (Arch: `pyside6`, Fedora:
-`python3-pyside6`, Debian/Ubuntu: `python3-pyside6.qtwidgets`), you can reuse
-it instead of downloading Qt again:
-
-```sh
-python -m venv --system-site-packages .venv
-.venv/bin/pip install .
-```
-
-To get a launcher entry, copy `data/camchord.desktop` to
+For a menu entry by hand, copy `data/camchord.desktop` to
 `~/.local/share/applications/` and `data/camchord.svg` to
-`~/.local/share/icons/hicolor/scalable/apps/`, and make sure `camchord` is on
-your `PATH` (or put the full path in the `Exec=` line).
+`~/.local/share/icons/hicolor/scalable/apps/`, and set `Exec=` to the full path.
 
 ## Use
 
