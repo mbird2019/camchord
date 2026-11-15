@@ -74,9 +74,13 @@ def _camera_check() -> None:
         return
     blocked = [n for n in nodes if not os.access(n, os.R_OK | os.W_OK)]
     cameras = CameraIndex().refresh()
+    summary: dict[str, int] = {}
     for camera in cameras:
         extra = "pan, tilt and zoom" if camera.ptz else "picture only"
-        _line("ok", f"camera: {camera.name} ({extra})")
+        key = f"{camera.name} ({extra})"
+        summary[key] = summary.get(key, 0) + 1
+    for key, count in summary.items():
+        _line("ok", f"camera: {key}" + (f" x {count} devices" if count > 1 else ""))
     if blocked and not cameras:
         _line("FAIL", f"cannot open {blocked[0]}: {_permission_hint()}")
     elif blocked:
