@@ -34,6 +34,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: ffmpeg (a requirement the launcher only reports)
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
       - name: Launcher sets itself up
         run: ./camchord --version
       - name: Doctor
