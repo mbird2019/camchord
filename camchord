@@ -27,18 +27,12 @@ find_python() {
     return 1
 }
 
-# True when the system's own Python already has a recent enough PySide6 (saves downloading Qt).
-system_pyside() {
-    "$1" -c 'import PySide6, sys; sys.exit(tuple(map(int, PySide6.__version__.split(".")[:2])) < (6, 5))' 2>/dev/null
-}
-
 setup() {
-    local py flags=()
+    local py
     py=$(find_python) || die "Python 3.10 or newer is needed (Debian/Ubuntu: sudo apt install python3 python3-venv; Fedora: sudo dnf install python3)."
     if [ ! -x "$VENV/bin/python" ]; then
         say "first run: setting up in $VENV (downloads Qt, about 200 MB, once)"
-        system_pyside "$py" && flags=(--system-site-packages)
-        if ! "$py" -m venv ${flags[@]+"${flags[@]}"} "$VENV"; then
+        if ! "$py" -m venv "$VENV"; then
             rm -rf "$VENV"
             die "could not create a virtual environment (Debian/Ubuntu: sudo apt install python3-venv)."
         fi

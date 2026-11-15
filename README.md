@@ -85,14 +85,16 @@ pipx install git+https://github.com/mbird2019/camchord
 camchord
 ```
 
-By hand, from a checkout (this reuses your distribution's PySide6 if you give
-`--system-site-packages`; Arch `pyside6`, Fedora `python3-pyside6`):
+By hand, from a checkout:
 
 ```sh
 python -m venv .venv
 .venv/bin/pip install -e .
 .venv/bin/camchord
 ```
+
+Use a clean virtual environment, not `--system-site-packages`: a distribution's
+PySide6 mixed with the one from pip fails to load.
 
 For a menu entry by hand, copy `data/camchord.desktop` to
 `~/.local/share/applications/` and `data/camchord.svg` to
